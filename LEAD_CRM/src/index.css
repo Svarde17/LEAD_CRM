@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: #f6f9fc;
+  color: #1a1f36;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #e0e6ef; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #c8d0db; }
+
+/* Fade in animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in { animation: fadeInUp 0.3s ease forwards; }
+.animate-fade-in-delay-1 { animation: fadeInUp 0.3s ease 0.05s both; }
+.animate-fade-in-delay-2 { animation: fadeInUp 0.3s ease 0.1s both; }
+.animate-fade-in-delay-3 { animation: fadeInUp 0.3s ease 0.15s both; }
+.animate-fade-in-delay-4 { animation: fadeInUp 0.3s ease 0.2s both; }
+
+/* Shimmer loading */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f6f9fc 25%, #eef2f7 50%, #f6f9fc 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Input focus */
+input:focus, textarea:focus, select:focus {
+  box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.12);
+}
+
+/* Card hover */
+.card-hover {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-hover:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+/* Drop target */
+.drop-target {
+  border: 2px dashed rgba(99, 91, 255, 0.4) !important;
+  background: rgba(99, 91, 255, 0.03) !important;
+}
