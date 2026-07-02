@@ -1,0 +1,16 @@
+# Python
+backend/venv/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+backend/.env
+backend/alembic/versions/
+
+# Node
+LEAD_CRM/node_modules/
+LEAD_CRM/dist/
+LEAD_CRM/.env
+
+# OS
+.DS_Store
+*.suo
