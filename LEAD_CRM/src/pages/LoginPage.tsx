@@ -134,7 +134,13 @@ export default function LoginPage() {
               <div className="flex-1 h-px bg-border" />
             </div>
 
-            <a onClick={async (e) => { e.preventDefault(); const url = await authService.googleAuthUrl(); window.location.href = url; }}
+            <a onClick={async (e) => {
+                e.preventDefault()
+                const url = await authService.googleAuthUrl()
+                if (url.startsWith('https://accounts.google.com/')) {
+                  window.location.href = url
+                }
+              }}
               href="#"
               className="flex items-center justify-center gap-3 w-full py-2.5 rounded-lg text-sm font-medium text-text-muted border border-border hover:bg-background hover:border-primary/30 transition-all cursor-pointer">
               <svg width="15" height="15" viewBox="0 0 24 24">

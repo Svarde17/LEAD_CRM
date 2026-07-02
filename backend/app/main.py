@@ -10,7 +10,7 @@ from app.jobs.scheduler import send_daily_reminders
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     scheduler = BackgroundScheduler()
-    scheduler.add_job(send_daily_reminders, "cron", hour=8, minute=0)
+    scheduler.add_job(send_daily_reminders, "cron", hour=18, minute=0)
     scheduler.start()
     yield
     scheduler.shutdown()

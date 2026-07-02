@@ -32,11 +32,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (newToken: string) => {
     localStorage.setItem('token', newToken)
     const me = await authService.me()
-    console.log('user fetched:', me)
     setUser(me)
     setToken(newToken)
     setIsLoading(false)
-    console.log('state updated — user, token, isLoading=false')
   }
 
   const logout = () => {

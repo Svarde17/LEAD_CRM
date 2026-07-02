@@ -8,12 +8,8 @@ export const leadsService = {
   create: (data: Partial<Lead>) =>
     api.post<Lead>('/leads', data).then(r => r.data),
 
-  update: (id: string, data: Partial<Lead>) => {
-    console.log('Updating lead:', id, data)
-    return api.put<Lead>(`/leads/${id}`, data)
-      .then(r => r.data)
-      .catch(e => { console.error('Update error:', e?.response?.data); throw e })
-  },
+  update: (id: string, data: Partial<Lead>) =>
+    api.put<Lead>(`/leads/${id}`, data).then(r => r.data),
 
   remove: (id: string) =>
     api.delete(`/leads/${id}`),
