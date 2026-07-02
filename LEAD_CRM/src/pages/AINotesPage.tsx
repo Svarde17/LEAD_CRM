@@ -37,7 +37,7 @@ export default function AINotesPage() {
       </div>
 
       <div className="bg-white rounded-xl shadow-card p-6 animate-fade-in">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Input */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">

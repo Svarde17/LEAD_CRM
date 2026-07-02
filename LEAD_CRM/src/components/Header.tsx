@@ -1,15 +1,18 @@
 import { useState, useRef, useEffect } from 'react'
-import { Bell, User, LogOut, Search, X, Calendar, Snowflake } from 'lucide-react'
+import { Bell, User, LogOut, Search, X, Calendar, Snowflake, Menu } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useLeads } from '../hooks/useLeads'
 import { useFollowUps } from '../hooks/useFollowUps'
 
-export function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void
+}
+
+export function Header({ onMenuClick }: HeaderProps) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
-  // Search
   const [query, setQuery] = useState('')
   const [searchOpen, setSearchOpen] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
@@ -23,13 +26,11 @@ export function Header() {
       ).slice(0, 6)
     : []
 
-  // Notifications
   const [notifOpen, setNotifOpen] = useState(false)
   const notifRef = useRef<HTMLDivElement>(null)
   const { data: todayFollowUps = [] } = useFollowUps(true)
   const pending = todayFollowUps.filter(f => !f.completed)
 
-  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -53,47 +54,54 @@ export function Header() {
   }
 
   return (
-    <header className="h-14 bg-white border-b border-border flex items-center justify-between px-6 flex-shrink-0">
+    <header className="h-14 bg-white border-b border-border flex items-center justify-between px-4 md:px-6 flex-shrink-0">
 
-      {/* Search */}
-      <div ref={searchRef} className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-        <input
-          value={query}
-          onChange={e => { setQuery(e.target.value); setSearchOpen(true) }}
-          onFocus={() => setSearchOpen(true)}
-          placeholder="Search leads..."
-          className="pl-8 pr-8 py-1.5 text-sm rounded-lg border border-border bg-background outline-none focus:border-primary w-56 transition-all"
-        />
-        {query && (
-          <button onClick={() => { setQuery(''); setSearchOpen(false) }} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text">
-            <X size={12} />
-          </button>
-        )}
+      <div className="flex items-center gap-3">
+        {/* Hamburger - mobile only */}
+        <button onClick={onMenuClick} className="md:hidden p-1.5 rounded-lg hover:bg-gray-50 border border-border">
+          <Menu size={16} className="text-text-muted" />
+        </button>
 
-        {searchOpen && query.trim().length > 1 && (
-          <div className="absolute top-full mt-1.5 left-0 w-72 bg-white rounded-xl border border-border shadow-card-lg z-50 overflow-hidden">
-            {results.length === 0 ? (
-              <p className="text-xs text-text-muted text-center py-4">No leads found</p>
-            ) : (
-              results.map(lead => (
-                <button key={lead.id} onClick={() => { navigate('/leads'); setQuery(''); setSearchOpen(false) }}
-                  className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-background transition-colors text-left">
-                  <div>
-                    <p className="text-sm font-medium text-text">{lead.name}</p>
-                    {lead.company && <p className="text-xs text-text-muted">{lead.company}</p>}
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    {lead.is_cold && <Snowflake size={10} className="text-blue-400" />}
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full capitalize ${statusColors[lead.status]}`}>
-                      {lead.status}
-                    </span>
-                  </div>
-                </button>
-              ))
-            )}
-          </div>
-        )}
+        {/* Search */}
+        <div ref={searchRef} className="relative hidden sm:block">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+          <input
+            value={query}
+            onChange={e => { setQuery(e.target.value); setSearchOpen(true) }}
+            onFocus={() => setSearchOpen(true)}
+            placeholder="Search leads..."
+            className="pl-8 pr-8 py-1.5 text-sm rounded-lg border border-border bg-background outline-none focus:border-primary w-44 md:w-56 transition-all"
+          />
+          {query && (
+            <button onClick={() => { setQuery(''); setSearchOpen(false) }} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text">
+              <X size={12} />
+            </button>
+          )}
+
+          {searchOpen && query.trim().length > 1 && (
+            <div className="absolute top-full mt-1.5 left-0 w-72 bg-white rounded-xl border border-border shadow-card-lg z-50 overflow-hidden">
+              {results.length === 0 ? (
+                <p className="text-xs text-text-muted text-center py-4">No leads found</p>
+              ) : (
+                results.map(lead => (
+                  <button key={lead.id} onClick={() => { navigate('/leads'); setQuery(''); setSearchOpen(false) }}
+                    className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-background transition-colors text-left">
+                    <div>
+                      <p className="text-sm font-medium text-text">{lead.name}</p>
+                      {lead.company && <p className="text-xs text-text-muted">{lead.company}</p>}
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      {lead.is_cold && <Snowflake size={10} className="text-blue-400" />}
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full capitalize ${statusColors[lead.status]}`}>
+                        {lead.status}
+                      </span>
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-2">
@@ -111,7 +119,7 @@ export function Header() {
           </button>
 
           {notifOpen && (
-            <div className="absolute top-full mt-1.5 right-0 w-80 bg-white rounded-xl border border-border shadow-card-lg z-50 overflow-hidden">
+            <div className="absolute top-full mt-1.5 right-0 w-72 sm:w-80 bg-white rounded-xl border border-border shadow-card-lg z-50 overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                 <p className="text-sm font-semibold text-text">Notifications</p>
                 {pending.length > 0 && (
@@ -158,19 +166,19 @@ export function Header() {
         </div>
 
         {/* User */}
-        <div className="flex items-center gap-2.5 pl-3 ml-1 border-l border-border">
+        <div className="flex items-center gap-2 pl-3 ml-1 border-l border-border">
           {user?.avatar_url ? (
-            <img src={user.avatar_url} className="w-7 h-7 rounded-full object-cover" alt={user.name} />
+            <img src={user.avatar_url} className="w-7 h-7 rounded-full object-cover flex-shrink-0" alt={user.name} />
           ) : (
-            <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center">
+            <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
               <User size={13} className="text-white" />
             </div>
           )}
-          <div className="text-sm">
+          <div className="hidden sm:block text-sm">
             <p className="font-medium text-text leading-none text-xs">{user?.name}</p>
             <p className="text-xs text-text-muted mt-0.5">{user?.email}</p>
           </div>
-          <button onClick={logout} className="p-1.5 rounded-lg hover:bg-danger/5 hover:text-danger transition-colors ml-1">
+          <button onClick={logout} className="p-1.5 rounded-lg hover:bg-danger/5 hover:text-danger transition-colors">
             <LogOut size={14} className="text-text-muted" />
           </button>
         </div>

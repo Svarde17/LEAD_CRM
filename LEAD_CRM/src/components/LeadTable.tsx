@@ -52,6 +52,8 @@ export function LeadTable({ leads, isLoading, onEdit, onDelete }: Props) {
 
   return (
     <div className="bg-white rounded-xl shadow-card overflow-hidden animate-fade-in">
+      {/* Desktop table */}
+      <div className="hidden md:block">
       <table className="w-full">
         <thead>
           <tr className="border-b border-border bg-background">
@@ -76,7 +78,7 @@ export function LeadTable({ leads, isLoading, onEdit, onDelete }: Props) {
                       )}
                     </div>
                     {lead.is_cold && (
-                      <span title="Gone cold — no activity in 14+ days" className="flex items-center gap-1 text-xs font-semibold text-blue-400 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100">
+                      <span title="Gone cold" className="flex items-center gap-1 text-xs font-semibold text-blue-400 bg-blue-50 px-1.5 py-0.5 rounded-full border border-blue-100">
                         <Snowflake size={10} /> Cold
                       </span>
                     )}
@@ -125,6 +127,54 @@ export function LeadTable({ leads, isLoading, onEdit, onDelete }: Props) {
           )}
         </tbody>
       </table>
+      </div>
+
+      {/* Mobile cards */}
+      <div className="md:hidden divide-y divide-border">
+        {leads.length === 0 && (
+          <p className="py-12 text-center text-sm text-text-muted">No leads found. Add your first lead.</p>
+        )}
+        {leads.map(lead => {
+          const s = statusConfig[lead.status]
+          return (
+            <div key={lead.id} className={`p-4 ${lead.is_cold ? 'bg-blue-50/30' : ''}`}>
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-sm font-semibold text-text">{lead.name}</p>
+                    {lead.is_cold && <Snowflake size={11} className="text-blue-400" />}
+                  </div>
+                  {lead.company && <p className="text-xs text-text-muted">{lead.company}</p>}
+                </div>
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full capitalize flex-shrink-0 ${s.className}`}>{s.label}</span>
+              </div>
+              <div className="flex flex-wrap gap-x-4 gap-y-1 mb-3">
+                {lead.phone && <div className="flex items-center gap-1 text-xs text-text-muted"><Phone size={11} />{lead.phone}</div>}
+                {lead.email && <div className="flex items-center gap-1 text-xs text-text-muted"><Mail size={11} />{lead.email}</div>}
+                <div className="flex items-center gap-1 text-xs font-semibold text-success">₹{Number(lead.value).toLocaleString('en-IN')}</div>
+                <ScoreBadge score={lead.ai_score} />
+              </div>
+              <div className="flex items-center justify-between">
+                {lead.follow_up_date
+                  ? <div className="flex items-center gap-1 text-xs text-text-muted"><Calendar size={11} />{lead.follow_up_date}</div>
+                  : <span />}
+                <div className="flex items-center gap-1">
+                  <button onClick={() => sendWA(lead)} disabled={sendingWA === lead.id}
+                    className="p-1.5 rounded-lg hover:bg-green-50 hover:text-green-600 text-text-muted transition-colors disabled:opacity-50">
+                    <MessageCircle size={13} />
+                  </button>
+                  <button onClick={() => onEdit(lead)} className="p-1.5 rounded-lg hover:bg-primary/10 hover:text-primary text-text-muted transition-colors">
+                    <Pencil size={13} />
+                  </button>
+                  <button onClick={() => onDelete(lead.id)} className="p-1.5 rounded-lg hover:bg-danger/10 hover:text-danger text-text-muted transition-colors">
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

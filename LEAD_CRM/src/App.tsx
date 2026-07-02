@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
@@ -14,8 +15,7 @@ const qc = new QueryClient()
 
 function AppLayout() {
   const { user, isLoading } = useAuth()
-
-  console.log('AppLayout render — user:', user, 'isLoading:', isLoading)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   if (isLoading) return (
     <div className="min-h-screen bg-background flex items-center justify-center">
@@ -27,10 +27,10 @@ function AppLayout() {
 
   return (
     <div className="min-h-screen bg-background flex">
-      <Sidebar />
-      <div className="flex-1 flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-1 p-8 overflow-auto">
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div className="flex-1 flex flex-col min-h-screen min-w-0">
+        <Header onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1 p-4 md:p-8 overflow-auto">
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/leads" element={<LeadsPage />} />

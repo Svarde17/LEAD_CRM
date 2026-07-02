@@ -36,8 +36,8 @@ export default function LeadsPage() {
         </button>
       </div>
 
-      <div className="flex gap-3">
-        <div className="relative flex-1 max-w-xs">
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1 sm:max-w-xs">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search leads..."
             className="w-full pl-8 pr-4 py-2 bg-white border border-border rounded-lg text-sm focus:outline-none focus:border-primary shadow-input" />

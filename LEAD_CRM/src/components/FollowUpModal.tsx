@@ -22,15 +22,15 @@ export function FollowUpModal({ leads, onSave, onClose }: Props) {
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }))
 
   return (
-    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md shadow-card-lg animate-fade-in border border-border">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+      <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md shadow-card-lg animate-fade-in border border-border">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <h3 className="text-sm font-semibold text-text">Add Follow-up</h3>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-background text-text-muted transition-colors">
             <X size={15} />
           </button>
         </div>
-        <div className="p-6 space-y-3">
+        <div className="p-4 sm:p-6 space-y-3 max-h-[70vh] overflow-y-auto">
           <select value={form.lead_id} onChange={e => set('lead_id', e.target.value)} className={inputCls}>
             {leads.map(l => <option key={l.id} value={l.id}>{l.name} — {l.company}</option>)}
           </select>

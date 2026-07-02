@@ -4,7 +4,7 @@ backend/venv/
 **/*.pyc
 **/*.pyo
 backend/.env
-backend/alembic/versions/
+# backend/alembic/versions/
 
 # Node
 LEAD_CRM/node_modules/
